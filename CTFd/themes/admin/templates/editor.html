@@ -1,14 +1,9 @@
 {% extends "admin/base.html" %}
 
 {% block stylesheets %}
-	<link rel="stylesheet" type="text/css" href="
-			{{ url_for('views.themes', theme='admin', path='css/vendor/codemirror.min.css') }}">
-	<style>
-	.CodeMirror-gutters {
-		min-height: 100% !important;;
-	}
-	</style>
+	<link rel="stylesheet" href="{{ url_for('views.themes', theme='admin', path='css/editor.css') }}">
 {% endblock %}
+
 
 {% block content %}
 <div id="media-modal" class="modal fade" tabindex="-1">
