@@ -3,7 +3,7 @@
 @import "~codemirror/lib/codemirror.css";
 @import "~typeface-lato/index.css";
 @import "~typeface-raleway/index.css";
-@import "includes/jumbotron.css";
+@import "../../../core/assets/css/includes/jumbotron.css";
 @import "includes/sticky-footer.css";
 
 html, body, .container {
@@ -50,8 +50,6 @@ pre {
 }
 
 .jumbotron {
-    /*background-color: #343a40;*/
-    /*color: #FFF;*/
     border-radius: 0;
     text-align: center;
 }
@@ -59,10 +57,7 @@ pre {
 .form-control {
     position: relative;
     display: block;
-    /*padding: 0.8em;*/
     border-radius: 0;
-    /*background: #f0f0f0;*/
-    /*color: #aaa;*/
     font-weight: 400;
     font-family: "Avenir Next", "Helvetica Neue", Helvetica, Arial, sans-serif;
     -webkit-appearance: none;
