@@ -1,19 +1,18 @@
-function hint(id) {
-    return CTFd.fetch('/api/v1/hints/' + id, {
+import MarkdownIt from 'markdown-it'
+import EZQ from 'ezq'
+
+const fetch = window.fetch
+
+const get = (id) => fetch('/api/v1/hints/' + id, {
         method: 'GET',
         credentials: 'same-origin',
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         }
-    }).then(function (response) {
-        return response.json();
-    });
-}
+    }).then((response) => response.json());
 
-
-function unlock(params){
-    return CTFd.fetch('/api/v1/unlocks', {
+const unlock = (params) => fetch('/api/v1/unlocks', {
         method: 'POST',
         credentials: 'same-origin',
         headers: {
@@ -21,51 +20,65 @@ function unlock(params){
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(params)
-    }).then(function (response) {
-        return response.json();
-    });
-}
+    }).then((response) => response.json());
 
-function loadhint(hintid) {
-    var md = window.markdownit({
+const load = (id) => {
+    const md = MarkdownIt({
         html: true,
     });
 
-    hint(hintid).then(function (response) {
+    hint(id).then((response) => {
         if (response.data.content) {
-            ezal({
+            EZQ.ezal({
                 title: "Hint",
                 body: md.render(response.data.content),
                 button: "Got it!"
             });
-        } else {
-            ezq({
-                title: "Unlock Hint?",
-                body: "Are you sure you want to open this hint?",
-                success: function () {
-                    var params = {
-                        target: hintid,
-                        type: "hints"
-                    };
-                    unlock(params).then(function (response) {
-                        if (response.success) {
-                            hint(hintid).then(function(response) {
-                                ezal({
-                                    title: "Hint",
-                                    body: md.render(response.data.content),
-                                    button: "Got it!"
-                                });
-                            });
-                        } else {
-                            ezal({
-                                title: "Error",
-                                body: md.render(response.errors.score),
+
+            return;
+        }
+
+        EZQ.ezq({
+            title: "Unlock Hint?",
+            body: "Are you sure you want to open this hint?",
+            success: () => {
+                var params = {
+                    target: id,
+                    type: "hints"
+                };
+                unlock(params).then((response) => {
+                    if (response.success) {
+                        hint(id).then((response) => {
+                            EZQ.ezal({
+                                title: "Hint",
+                                body: md.render(response.data.content),
                                 button: "Got it!"
                             });
-                        }
+                        });
+
+                        return;
+                    }
+
+                    EZQ.ezal({
+                        title: "Error",
+                        body: md.render(response.errors.score),
+                        button: "Got it!"
                     });
-                }
-            });
-        }
+                });
+            }
+        });
     });
+}
+
+const legacy = {
+    'hint': get,
+    'unlock': unlock,
+    'loadhint': load,
+}
+
+module.exports = {
+    get,
+    load,
+    unlock,
+    legacy
 }
