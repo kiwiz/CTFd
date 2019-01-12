@@ -1,46 +1,33 @@
-var CTFd = (function () {
+exports.options = {
+    urlRoot: '',
+    csrfNonce: '',
+};
 
-    var options = {
-        urlRoot: '',
-        csrfNonce: '',
-    };
+exports.challenges = {};
 
-    var challenges = {};
+exports.scoreboard = () => {};
 
-    var scoreboard = function() {};
+exports.teams = {};
 
-    var teams = {};
+exports.users = {};
 
-    var users = {};
+exports.fetch = (url, options) => {
+    if (options === undefined) {
+        options = {
+            method: "GET",
+            credentials: "same-origin",
+            headers: {},
+        };
+    }
+    url = exports.options.urlRoot + url;
 
-    var fetch = function(url, options) {
-        if (options === undefined) {
-            options = {
-                method: "GET",
-                credentials: "same-origin",
-                headers: {},
-            };
-        }
-        url = this.options.urlRoot + url;
+    if (options.headers === undefined) {
+        options.headers = {};
+    }
+    options.credentials = 'same-origin';
+    options.headers['Accept'] = 'application/json';
+    options.headers['Content-Type'] = 'application/json';
+    options.headers['CSRF-Token'] = exports.options.csrfNonce;
 
-
-        if (options.headers === undefined) {
-            options.headers = {};
-        }
-        options.credentials = 'same-origin';
-        options.headers['Accept'] = 'application/json';
-        options.headers['Content-Type'] = 'application/json';
-        options.headers['CSRF-Token'] = this.options.csrfNonce;
-
-        return window.fetch(url, options);
-    };
-
-    return {
-        challenges: challenges,
-        scoreboard: scoreboard,
-        teams: teams,
-        users: users,
-        fetch: fetch,
-        options: options
-    };
-})();
+    return window.fetch(url, options);
+}
