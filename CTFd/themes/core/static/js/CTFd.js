@@ -1,19 +1,12 @@
 import hint from 'hint'
 import fetch from 'fetch'
 import config from 'config'
+import { API } from 'api'
 
-exports.config = config;
+const api = API
 
-exports.challenges = {};
-
-exports.scoreboard = () => {};
-
-exports.teams = {};
-
-exports.users = {};
-
-exports.api = {
-    hints
-    hints = hints
-
-exports.fetch = fetch
+exports.CTFd = {
+    config,
+    api,
+    fetch,
+}
