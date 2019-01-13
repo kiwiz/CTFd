@@ -9,7 +9,6 @@ import styles from 'styles'
 import config from 'config'
 
 events(config.script_root)
-
 styles()
 
 window.CTFd = CTFd

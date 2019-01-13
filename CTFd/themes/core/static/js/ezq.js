@@ -1,4 +1,4 @@
-let modal = '<div class="modal fade" tabindex="-1" role="dialog">' +
+const modalTpl = '<div class="modal fade" tabindex="-1" role="dialog">' +
     '  <div class="modal-dialog" role="document">' +
     '    <div class="modal-content">' +
     '      <div class="modal-header">' +
@@ -16,31 +16,31 @@ let modal = '<div class="modal fade" tabindex="-1" role="dialog">' +
     '  </div>' +
     '</div>';
 
-
-let progress = '<div class="progress">' +
+const progressTpl = '<div class="progress">' +
     '  <div class="progress-bar progress-bar-success progress-bar-striped progress-bar-animated" role="progressbar" style="width: \{0\}%">' +
     '  </div>' +
     '</div>';
 
-
-let error_template = "<div class=\"alert alert-danger alert-dismissable\" role=\"alert\">\n" +
+const errorTpl = "<div class=\"alert alert-danger alert-dismissable\" role=\"alert\">\n" +
     "  <span class=\"sr-only\">Error:</span>\n" +
     "  \{0\}\n" +
     "  <button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">×</span></button>\n" +
     "</div>";
 
-
-let success_template = "<div class=\"alert alert-success alert-dismissable submit-row\" role=\"alert\">\n" +
+const successTpl = "<div class=\"alert alert-success alert-dismissable submit-row\" role=\"alert\">\n" +
     "  <strong>Success!</strong>\n" +
     "  \{0\}\n" +
     "  <button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">×</span></button>\n" +
     "</div>";
 
+const buttonTpl = '<button type="button" class="btn btn-primary" data-dismiss="modal">{0}</button>';
+const noTpl = '<button type="button" class="btn btn-danger" data-dismiss="modal">No</button>';
+const yesTpl = '<button type="button" class="btn btn-primary" data-dismiss="modal">Yes</button>';
 
 exports.ezAlert = (args) => {
-    let res = modal.format(args.title, args.body);
-    let obj = $(res);
-    let button = '<button type="button" class="btn btn-primary" data-dismiss="modal">{0}</button>'.format(args.button);
+    const modal = modalTpl.format(args.title, args.body);
+    const obj = $(modal);
+    const button = buttonTpl.format(args.button);
 
     obj.find('.modal-footer').append(button);
     $('main').append(obj);
@@ -55,21 +55,22 @@ exports.ezAlert = (args) => {
 }
 
 exports.ezQuery = (args) => {
-    let res = modal.format(args.title, args.body);
-    let obj = $(res);
-    let deny = '<button type="button" class="btn btn-danger" data-dismiss="modal">No</button>';
-    let confirm = $('<button type="button" class="btn btn-primary" data-dismiss="modal">Yes</button>');
+    const modal = modalTpl.format(args.title, args.body);
+    const obj = $(modal);
 
-    obj.find('.modal-footer').append(deny);
-    obj.find('.modal-footer').append(confirm);
+    const yes = $(yesTpl);
+    const no = $(noTpl);
+
+    obj.find('.modal-footer').append(no);
+    obj.find('.modal-footer').append(yes);
 
     $('main').append(obj);
 
-    $(obj).on('hidden.bs.modal', function (e) {
+    $(obj).on('hidden.bs.modal', (e) => {
         $(this).modal('dispose');
     });
 
-    $(confirm).click(function(){
+    yes.click(() => {
         args.success();
     });
 
@@ -79,26 +80,21 @@ exports.ezQuery = (args) => {
 }
 
 exports.ezProgressBar = (args) => {
-    let bar = progress.format(args.width);
-    let res = modal.format(args.title, bar);
+    const progress = progressTpl.format(args.width);
+    const modal = modalTpl.format(args.title, progress);
 
-    let obj = $(res);
+    const obj = $(modal);
     $('main').append(obj);
 
     return obj.modal('show');
 }
 
 exports.ezBadge = (args) => {
-    let type = args.type;
-    let body = args.body;
-    let tpl = undefined;
-    if (type === 'success') {
-        tpl = success_template;
-    } else if (type === 'error') {
-        tpl = error_template;
+    const mapping = {
+        success: successTpl,
+        error: errorTpl,
     }
 
-    tpl = tpl.format(body);
-    let obj = $(tpl);
-    return obj;
+    const tpl = mapping[args.type].format(args.body)
+    return $(tpl);
 }
