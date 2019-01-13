@@ -1,3 +1,5 @@
+import CTFd from 'CTFd'
+
 function scoregraph() {
     var times = [];
     var scores = [];
