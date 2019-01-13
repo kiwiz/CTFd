@@ -56,11 +56,7 @@
 	<script>
 		var authed = {{ (id is defined) | tojson }};
 	</script>
-	<script src="{{ url_for('views.themes', path='js/utils.js') }}"></script>
-	<script src="{{ url_for('views.themes', path='js/multi-modal.js') }}"></script>
 	{% if admin or not errors %}
 	<script src="{{ url_for('views.themes', path='js/challenges.js') }}"></script>
-	<script src="{{ url_for('views.themes', path='js/hints.js') }}"></script>
 	{% endif %}
-	<script src="{{ url_for('views.themes', path='js/style.js') }}"></script>
 {% endblock %}

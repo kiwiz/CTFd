@@ -1,4 +1,4 @@
-var modal = '<div class="modal fade" tabindex="-1" role="dialog">' +
+let modal = '<div class="modal fade" tabindex="-1" role="dialog">' +
     '  <div class="modal-dialog" role="document">' +
     '    <div class="modal-content">' +
     '      <div class="modal-header">' +
@@ -16,30 +16,31 @@ var modal = '<div class="modal fade" tabindex="-1" role="dialog">' +
     '  </div>' +
     '</div>';
 
-var progress = '<div class="progress">' +
+
+let progress = '<div class="progress">' +
     '  <div class="progress-bar progress-bar-success progress-bar-striped progress-bar-animated" role="progressbar" style="width: \{0\}%">' +
     '  </div>' +
     '</div>';
 
 
-var error_template = "<div class=\"alert alert-danger alert-dismissable\" role=\"alert\">\n" +
+let error_template = "<div class=\"alert alert-danger alert-dismissable\" role=\"alert\">\n" +
     "  <span class=\"sr-only\">Error:</span>\n" +
     "  \{0\}\n" +
     "  <button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">×</span></button>\n" +
     "</div>";
 
 
-var success_template = "<div class=\"alert alert-success alert-dismissable submit-row\" role=\"alert\">\n" +
+let success_template = "<div class=\"alert alert-success alert-dismissable submit-row\" role=\"alert\">\n" +
     "  <strong>Success!</strong>\n" +
     "  \{0\}\n" +
     "  <button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">×</span></button>\n" +
     "</div>";
 
 
-function ezal(args){
-    var res = modal.format(args.title, args.body);
-    var obj = $(res);
-    var button = '<button type="button" class="btn btn-primary" data-dismiss="modal">{0}</button>'.format(args.button);
+exports.ezAlert = (args) => {
+    let res = modal.format(args.title, args.body);
+    let obj = $(res);
+    let button = '<button type="button" class="btn btn-primary" data-dismiss="modal">{0}</button>'.format(args.button);
 
     obj.find('.modal-footer').append(button);
     $('main').append(obj);
@@ -53,11 +54,11 @@ function ezal(args){
     return obj;
 }
 
-function ezq(args){
-    var res = modal.format(args.title, args.body);
-    var obj = $(res);
-    var deny = '<button type="button" class="btn btn-danger" data-dismiss="modal">No</button>';
-    var confirm = $('<button type="button" class="btn btn-primary" data-dismiss="modal">Yes</button>');
+exports.ezQuery = (args) => {
+    let res = modal.format(args.title, args.body);
+    let obj = $(res);
+    let deny = '<button type="button" class="btn btn-danger" data-dismiss="modal">No</button>';
+    let confirm = $('<button type="button" class="btn btn-primary" data-dismiss="modal">Yes</button>');
 
     obj.find('.modal-footer').append(deny);
     obj.find('.modal-footer').append(confirm);
@@ -77,20 +78,20 @@ function ezq(args){
     return obj;
 }
 
-function ezpg(args){
-    var bar = progress.format(args.width);
-    var res = modal.format(args.title, bar);
+exports.ezProgressBar = (args) => {
+    let bar = progress.format(args.width);
+    let res = modal.format(args.title, bar);
 
-    var obj = $(res);
+    let obj = $(res);
     $('main').append(obj);
 
     return obj.modal('show');
 }
 
-function ezbadge(args) {
-    var type = args.type;
-    var body = args.body;
-    var tpl = undefined;
+exports.ezBadge = (args) => {
+    let type = args.type;
+    let body = args.body;
+    let tpl = undefined;
     if (type === 'success') {
         tpl = success_template;
     } else if (type === 'error') {
@@ -98,6 +99,6 @@ function ezbadge(args) {
     }
 
     tpl = tpl.format(body);
-    var obj = $(tpl);
+    let obj = $(tpl);
     return obj;
 }

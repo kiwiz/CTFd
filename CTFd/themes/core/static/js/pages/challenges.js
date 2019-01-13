@@ -1,3 +1,5 @@
+import nunjucks from 'nunjucks'
+
 var challenges;
 var user_solves = [];
 var templates = {};

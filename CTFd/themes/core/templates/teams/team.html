@@ -158,8 +158,6 @@
 		{% endif %}
 		var team_account_id = team_self ? "me" : team_id;
 	</script>
-	<script src="{{ url_for('views.themes', path='js/vendor/plotly.min.js') }}"></script>
-	<script src="{{ url_for('views.themes', path='js/utils.js') }}"></script>
 	{% if solves %}
 	<script src="{{ url_for('views.themes', path='js/team.js') }}"></script>
 	{% endif %}

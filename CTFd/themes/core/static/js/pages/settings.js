@@ -1,3 +1,5 @@
+import fetch from 'fetch'
+
 var error_template = "<div class=\"alert alert-danger alert-dismissable\" role=\"alert\">\n" +
 "  <span class=\"sr-only\">Error:</span>\n" +
 "  \{0\}\n" +
@@ -19,7 +21,7 @@ $(function () {
         $('#results').empty();
         var params = $('#user-settings-form').serializeJSON(true);
 
-        CTFd.fetch('/api/v1/users/me', {
+        fetch('/api/v1/users/me', {
             method: 'PATCH',
             credentials: 'same-origin',
             headers: {

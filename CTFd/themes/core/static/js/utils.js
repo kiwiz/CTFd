@@ -1,9 +1,10 @@
+import $ from 'jquery'
+
 //http://stackoverflow.com/a/1186309
-$.fn.serializeObject = function()
-{
-    var o = {};
-    var a = this.serializeArray();
-    $.each(a, function() {
+$.fn.serializeObject = () => {
+    let o = {};
+    let a = this.serializeArray();
+    $.each(a, () => {
         if (o[this.name] !== undefined) {
             if (!o[this.name].push) {
                 o[this.name] = [o[this.name]];
@@ -14,12 +15,12 @@ $.fn.serializeObject = function()
         }
     });
     return o;
-};
+}
 
-$.fn.serializeJSON = function (omit_nulls) {
-    var params = {};
-    var form = $(this);
-    var values = form.serializeArray();
+$.fn.serializeJSON = (omit_nulls) => {
+    let params = {};
+    let form = $(this);
+    let values = form.serializeArray();
 
     values = values.concat(
         form.find('input[type=checkbox]:checked').map(
@@ -46,8 +47,8 @@ $.fn.serializeJSON = function (omit_nulls) {
 };
 
 //http://stackoverflow.com/a/2648463 - wizardry!
-String.prototype.format = String.prototype.f = function() {
-    var s = this,
+String.prototype.format = String.prototype.f = () => {
+    let s = this,
         i = arguments.length;
 
     while (i--) {
@@ -58,7 +59,7 @@ String.prototype.format = String.prototype.f = function() {
 
 //http://stackoverflow.com/a/7616484
 String.prototype.hashCode = function() {
-    var hash = 0, i, chr, len;
+    let hash = 0, i, chr, len;
     if (this.length == 0) return hash;
     for (i = 0, len = this.length; i < len; i++) {
         chr   = this.charCodeAt(i);
@@ -68,43 +69,16 @@ String.prototype.hashCode = function() {
     return hash;
 };
 
-function colorhash(str) {
-  var hash = 0;
-  for (var i = 0; i < str.length; i++) {
-    hash = str.charCodeAt(i) + ((hash << 5) - hash);
-  }
-  var colour = '#';
-  for (var i = 0; i < 3; i++) {
-    var value = (hash >> (i * 8)) & 0xFF;
-    colour += ('00' + value.toString(16)).substr(-2);
-  }
-  return colour;
-}
-
-function htmlentities(string) {
-    return $('<div/>').text(string).html();
-}
-
-function cumulativesum(arr) {
-    var result = arr.concat();
-    for (var i = 0; i < arr.length; i++) {
-        result[i] = arr.slice(0, i + 1).reduce(function (p, i) {
-            return p + i;
-        });
-    }
-    return result
-}
-
 // http://stepansuvorov.com/blog/2014/04/jquery-put-and-delete/
-jQuery.each(["patch", "put", "delete"], function(i, method) {
-    jQuery[method] = function(url, data, callback, type) {
-        if (jQuery.isFunction(data)) {
+$.each(["patch", "put", "delete"], function(i, method) {
+    $[method] = function(url, data, callback, type) {
+        if ($.isFunction(data)) {
             type = type || callback;
             callback = data;
             data = undefined;
         }
 
-        return jQuery.ajax({
+        return $.ajax({
             url: url,
             type: method,
             dataType: type,
@@ -113,3 +87,30 @@ jQuery.each(["patch", "put", "delete"], function(i, method) {
         });
     };
 });
+
+export.colorHash = (str) => {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = str.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  let colour = '#';
+  for (let i = 0; i < 3; i++) {
+    let value = (hash >> (i * 8)) & 0xFF;
+    colour += ('00' + value.toString(16)).substr(-2);
+  }
+  return colour;
+}
+
+export.htmlEntities(string) => {
+    return $('<div/>').text(string).html();
+}
+
+export.cumulativeSum(arr) => {
+    let result = arr.concat();
+    for (let i = 0; i < arr.length; i++) {
+        result[i] = arr.slice(0, i + 1).reduce(function (p, i) {
+            return p + i;
+        });
+    }
+    return result
+}

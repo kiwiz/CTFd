@@ -1,10 +1,17 @@
-var source = new EventSource(script_root + "/events");
+import { NativeEventSource, EventSourcePolyfill } from 'event-source-polyfill'
+import { ezAlert } from 'ezq'
 
-source.addEventListener('notification', function (event) {
-    var data = JSON.parse(event.data);
-    ezal({
-        title: data.title,
-        body: data.content,
-        button: "Got it!"
-    });
-}, false);
+const EventSource = NativeEventSource || EventSourcePolyfill
+
+exports.default = (root) => {
+    const source = new EventSource(root + "/events")
+
+    source.addEventListener('notification', function (event) {
+        const data = JSON.parse(event.data)
+        ezAlert({
+            title: data.title,
+            body: data.content,
+            button: "Got it!"
+        })
+    }, false)
+}

@@ -1,7 +1,8 @@
-exports.options = {
-    urlRoot: '',
-    csrfNonce: '',
-};
+import hint from 'hint'
+import fetch from 'fetch'
+import config from 'config'
+
+exports.config = config;
 
 exports.challenges = {};
 
@@ -11,23 +12,8 @@ exports.teams = {};
 
 exports.users = {};
 
-exports.fetch = (url, options) => {
-    if (options === undefined) {
-        options = {
-            method: "GET",
-            credentials: "same-origin",
-            headers: {},
-        };
-    }
-    url = exports.options.urlRoot + url;
+exports.api = {
+    hints
+    hints = hints
 
-    if (options.headers === undefined) {
-        options.headers = {};
-    }
-    options.credentials = 'same-origin';
-    options.headers['Accept'] = 'application/json';
-    options.headers['Content-Type'] = 'application/json';
-    options.headers['CSRF-Token'] = exports.options.csrfNonce;
-
-    return window.fetch(url, options);
-}
+exports.fetch = fetch

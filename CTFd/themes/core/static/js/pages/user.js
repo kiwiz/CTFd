@@ -1,4 +1,3 @@
-
 function scoregraph() {
     var times = [];
     var scores = [];
