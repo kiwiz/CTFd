@@ -1,3 +1,4 @@
+import $ from 'jquery'
 
 function scoregraph() {
     var times = [];
@@ -153,9 +154,8 @@ category_breakdown_graph();
 keys_percentage_graph();
 scoregraph();
 
-
-window.onresize = function () {
+$(window).resize($.throttle(250, () => {
     Plotly.Plots.resize(document.getElementById('keys-pie-graph'));
     Plotly.Plots.resize(document.getElementById('categories-pie-graph'));
     Plotly.Plots.resize(document.getElementById('score-graph'));
-};
+}))
