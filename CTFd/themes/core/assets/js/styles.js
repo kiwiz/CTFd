@@ -1,6 +1,6 @@
 import $ from 'jquery'
 
-exports.default = () => {
+export default () => {
     $('.form-control').bind({
         focus: () => {
             $(this).removeClass('input-filled-invalid')

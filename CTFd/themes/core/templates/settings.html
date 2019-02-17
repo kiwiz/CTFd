@@ -92,6 +92,7 @@
 </div>
 {% endblock %}
 
-{% block scripts %}
-	<script src="{{ url_for('views.themes', path='js/settings.js') }}"></script>
+
+{% block entrypoint %}
+<script async src="{{ url_for('views.themes', path='js/pages/settings.js') }}"></script>
 {% endblock %}

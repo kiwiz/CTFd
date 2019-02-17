@@ -39,7 +39,7 @@ const buttonTpl = '<button type="button" class="btn btn-primary" data-dismiss="m
 const noTpl = '<button type="button" class="btn btn-danger" data-dismiss="modal">No</button>'
 const yesTpl = '<button type="button" class="btn btn-primary" data-dismiss="modal">Yes</button>'
 
-exports.ezAlert = (args) => {
+export function ezAlert(args) {
     const modal = modalTpl.format(args.title, args.body)
     const obj = $(modal)
     const button = buttonTpl.format(args.button)
@@ -56,7 +56,7 @@ exports.ezAlert = (args) => {
     return obj
 }
 
-exports.ezQuery = (args) => {
+export function ezQuery(args) {
     const modal = modalTpl.format(args.title, args.body)
     const obj = $(modal)
 
@@ -81,7 +81,7 @@ exports.ezQuery = (args) => {
     return obj
 }
 
-exports.ezProgressBar = (args) => {
+export function ezProgressBar(args) {
     const progress = progressTpl.format(args.width)
     const modal = modalTpl.format(args.title, progress)
 
@@ -91,7 +91,7 @@ exports.ezProgressBar = (args) => {
     return obj.modal('show')
 }
 
-exports.ezBadge = (args) => {
+export function ezBadge(args) {
     const mapping = {
         success: successTpl,
         error: errorTpl,

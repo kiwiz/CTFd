@@ -1,4 +1,5 @@
-exports.default = {
+export default {
     urlRoot: '',
     csrfNonce: '',
+    userMode: '',
 }

@@ -13,6 +13,9 @@ module.exports = {
         },
         "sourceType": "module"
     },
+    "globals": {
+        "__dirname": true
+    },
     "rules": {
         "indent": [
             "error",
@@ -29,6 +32,10 @@ module.exports = {
         "semi": [
             "error",
             "never"
+        ],
+        "no-unused-vars": [
+            "error",
+            {"argsIgnorePattern": "event"}
         ],
     }
 };

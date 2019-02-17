@@ -1,6 +1,6 @@
 import $ from 'jquery'
 
-$.fn.serializeJSON = (omit_nulls) => {
+$.fn.serializeJSON = function(omit_nulls) {
     let params = {}
     let form = $(this)
     let values = form.serializeArray()
@@ -52,7 +52,7 @@ String.prototype.hashCode = () => {
     return hash
 }
 
-exports.colorHash = (str) => {
+export function colorHash(str) {
     let hash = 0
     for (let i = 0; i < str.length; i++) {
         hash = str.charCodeAt(i) + ((hash << 5) - hash)
@@ -65,11 +65,11 @@ exports.colorHash = (str) => {
     return colour
 }
 
-exports.htmlEntities = (string) => {
+export function htmlEntities(string) {
     return $('<div/>').text(string).html()
 }
 
-exports.cumulativeSum = (arr) => {
+export function cumulativeSum(arr) {
     let result = arr.concat()
     for (let i = 0; i < arr.length; i++) {
         result[i] = arr.slice(0, i + 1).reduce(function (p, i) {

@@ -1,9 +1,9 @@
 import 'whatwg-fetch'
-import config from 'config'
+import config from './config'
 
 const fetch = window.fetch
 
-exports.default = (url, options) => {
+export default (url, options) => {
     if (options === undefined) {
         options = {
             method: 'GET',

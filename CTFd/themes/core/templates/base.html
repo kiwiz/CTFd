@@ -123,14 +123,26 @@
 		</div>
 	</footer>
 
-	<script src="{{ url_for('views.themes', path='js/main.js') }}"></script>
+</body>
 	<script type="text/javascript">
-		var script_root = "{{ request.script_root }}";
-		var csrf_nonce = "{{ nonce }}";
-		var user_mode = "{{ get_config('user_mode') }}";
-		CTFd.config.urlRoot = script_root;
-		CTFd.config.csrfNonce = csrf_nonce;
+        var init = {
+            'urlRoot': "{{ request.script_root }}",
+            'csrfNonce': "{{ nonce }}",
+		    'userMode': "{{ get_config('user_mode') }}",
+		    'userId': {{ id if (id is defined) else 0 }},
+        }
 	</script>
+    <script async src="{{ url_for('views.themes', path='js/vendor~7274e1de.chunk.js') }}"></script>
+    <script async src="{{ url_for('views.themes', path='js/vendor~d4b3742f.chunk.js') }}"></script>
+    <script async src="{{ url_for('views.themes', path='js/vendor~690b702c.chunk.js') }}"></script>
+    <script async src="{{ url_for('views.themes', path='js/vendor~2ee72088.chunk.js') }}"></script>
+    <script async src="{{ url_for('views.themes', path='js/vendor~399b027d.chunk.js') }}"></script>
+    <script async src="{{ url_for('views.themes', path='js/vendor~b58f7129.chunk.js') }}"></script>
+    <script async src="{{ url_for('views.themes', path='js/vendor~4830fdba.chunk.js') }}"></script>
+	<script async src="{{ url_for('views.themes', path='js/core.js') }}"></script>
+    {% block entrypoint %}
+	<script async src="{{ url_for('views.themes', path='js/pages/main.js') }}"></script>
+    {% endblock %}
 	{% block scripts %}
 	{% endblock %}
 
@@ -143,5 +155,4 @@
 	<script src="{{ script }}"></script>
 	{% endif %}
 	{% endfor %}
-</body>
 </html>
