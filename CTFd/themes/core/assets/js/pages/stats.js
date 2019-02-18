@@ -83,7 +83,9 @@ const graph_configs = {
             plot_bgcolor: 'rgba(0,0,0,0)',
             legend: {
                 'orientation': 'v',
-            }
+            },
+            width: '50%',
+            height: '450px',
         },
         fn: (type, id, name, account_id) => `CTFd_submissions_${type}_${name}_${id}_${(new Date).toISOString().slice(0, 19)}`,
         format: (type, id, name, account_id, responses) => {
@@ -126,6 +128,8 @@ const graph_configs = {
             legend: {
                 'orientation': 'h',
             },
+            width: '50%',
+            height: '450px',
         },
         fn: (type, id, name, account_id) => `CTFd_submissions_${type}_${name}_${id}_${(new Date).toISOString().slice(0, 19)}`,
         format: (type, id, name, account_id, responses) => {
@@ -187,7 +191,7 @@ $(() => {
 
     setInterval(() => {
         updateGraphs(type, id, name, account_id)
-    }, 300000) // Update graphs every 5 minutes
+    }, 3000) // Update graphs every 5 minutes
     createGraphs(type, id, name, account_id)
-    updateGraphs(type, id, name, account_id)
+    // updateGraphs(type, id, name, account_id)
 })

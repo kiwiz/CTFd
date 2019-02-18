@@ -41,7 +41,7 @@ String.prototype.format = String.prototype.f = function() {
 }
 
 //http://stackoverflow.com/a/7616484
-String.prototype.hashCode = () => {
+String.prototype.hashCode = function() {
     let hash = 0, i, chr, len
     if (this.length == 0) return hash
     for (i = 0, len = this.length; i < len; i++) {

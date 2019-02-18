@@ -2,24 +2,22 @@ import './main'
 import nunjucks from 'nunjucks'
 import MarkdownIt from 'markdown-it'
 import { ezQuery, ezAlert } from '../ezq'
-import { htmlEntities } from '../util'
+import { htmlEntities } from '../utils'
 import Moment from 'moment'
 import $ from 'jquery'
 import CTFd from '../CTFd'
 import config from '../config'
 
 
-// CTFD user_mode, user
-
 const api_func = {
-    'team': (x) => CTFd.api.get_team_solves({teamId: x}),
-    'user': (x) => CTFd.api.get_user_solves({userId: x}),
+    'teams': (x) => CTFd.api.get_team_solves({teamId: x}),
+    'users': (x) => CTFd.api.get_user_solves({userId: x}),
 }
 
 const md = MarkdownIt({html: true})
 
+CTFd._internal.challenge = {}
 let challenges = []
-let challenge = null
 let solves = []
 
 const loadChal = (id) => {
@@ -44,13 +42,14 @@ const loadChalByName = (name) => {
 }
 
 const displayChal = (chal) => {
-    new Promise.all([
-        CTFd.api.get_challenge(chal.id),
+    return Promise.all([
+        CTFd.api.get_challenge({challengeId: chal.id}),
         $.getScript(config.urlRoot + chal.script),
         $.get(config.urlRoot + chal.template),
     ]).then((responses) => {
         const challenge_data = responses[0].data
-        const template_data = responses[2].data
+        const template_data = responses[2]
+        const challenge = CTFd._internal.challenge
 
         $('#challenge-window').empty()
         const template = nunjucks.compile(template_data)
@@ -84,11 +83,10 @@ const displayChal = (chal) => {
             event.preventDefault()
             $('#submit-key').addClass('disabled-button')
             $('#submit-key').prop('disabled', true)
-            challenge.submit((data) => {
-                renderSubmissionResponse(data)
-                loadChals()
-                    .then(markSolves)
-            })
+            CTFd._internal.challenge.submit()
+                .then(renderSubmissionResponse)
+                .then(loadChals)
+                .then(markSolves)
         })
 
         $('#submission-input').keyup((event) => {
@@ -105,7 +103,7 @@ const displayChal = (chal) => {
                 const $this = $(this)
                 if ($this.val() === '') {
                     $this.parent().removeClass('input--filled')
-                    let $label = $this.siblings('.input-label')
+                    const $label = $this.siblings('.input-label')
                     $label.removeClass('input--hide')
                 }
             }
@@ -119,11 +117,11 @@ const displayChal = (chal) => {
 }
 
 function renderSubmissionResponse(response) {
-    var result = response.data
+    const result = response.data
 
-    var result_message = $('#result-message')
-    var result_notification = $('#result-notification')
-    var answer_input = $('#submission-input')
+    const result_message = $('#result-message')
+    const result_notification = $('#result-notification')
+    const answer_input = $('#submission-input')
     result_notification.removeClass()
     result_message.text(result.message)
 
@@ -178,7 +176,7 @@ function renderSubmissionResponse(response) {
 }
 
 function markSolves() {
-    return api_func[CTFd.config.userMode].then(function (response) {
+    return api_func[CTFd.config.userMode]('me').then(function(response) {
         const solves = response.data
         for (let i = solves.length - 1; i >= 0; i--) {
             const btn = $('button[value="' + solves[i].challenge_id + '"]')
@@ -193,50 +191,50 @@ function loadUserSolves() {
         return Promise.resolve()
     }
 
-    return api_func[CTFd.config.userMode].then(function(response) {
-        var solves = response.data
+    return api_func[CTFd.config.userMode]('me').then(function(response) {
+        const solves = response.data
 
-        for (var i = solves.length - 1; i >= 0; i--) {
-            var chal_id = solves[i].challenge_id
+        for (let i = solves.length - 1; i >= 0; i--) {
+            const chal_id = solves[i].challenge_id
             solves.push(chal_id)
-
         }
     })
 }
 
 function getSolves(id) {
-    return CTFd.api.get_challenge_solves({id: id}).then((response) => {
+    return CTFd.api.get_challenge_solves({challengeId: id}).then((response) => {
         const data = response.data
         $('.challenge-solves').text(
             (parseInt(data.length) + ' Solves')
         )
-        var box = $('#challenge-solves-names')
+        const box = $('#challenge-solves-names')
         box.empty()
-        for (var i = 0; i < data.length; i++) {
-            var id = data[i].account_id
-            var name = data[i].name
-            var date = Moment(data[i].date).local().fromNow()
-            var account_url = data[i].account_url
+        for (let i = 0; i < data.length; i++) {
+            const id = data[i].account_id
+            const name = data[i].name
+            const date = Moment(data[i].date).local().fromNow()
+            const account_url = data[i].account_url
             box.append('<tr><td><a href="{0}">{2}</td><td>{3}</td></tr>'.format(account_url, id, htmlEntities(name), date))
         }
     })
 }
 
 function loadChals() {
-    return CTFd.get_challenge_list().then(function (response) {
-        var categories = []
+    return CTFd.api.get_challenge_list().then(function (response) {
+        const categories = []
+        const $challenges_board = $('#challenges-board')
         challenges = response.data
 
-        $('#challenges-board').empty()
+        $challenges_board.empty()
 
-        for (var i = challenges.length - 1; i >= 0; i--) {
+        for (let i = challenges.length - 1; i >= 0; i--) {
             challenges[i].solves = 0
             if ($.inArray(challenges[i].category, categories) == -1) {
-                var category = challenges[i].category
+                const category = challenges[i].category
                 categories.push(category)
 
-                var categoryid = category.replace(/ /g, '-').hashCode()
-                var categoryrow = $('' +
+                const categoryid = category.replace(/ /g, '-').hashCode()
+                const categoryrow = $('' +
                     '<div id="{0}-row" class="pt-5">'.format(categoryid) +
                     '<div class="category-header col-md-12 mb-3">' +
                     '</div>' +
@@ -246,7 +244,7 @@ function loadChals() {
                     '</div>')
                 categoryrow.find('.category-header').append($('<h3>' + category + '</h3>'))
 
-                $('#challenges-board').append(categoryrow)
+                $challenges_board.append(categoryrow)
             }
         }
 
@@ -265,8 +263,8 @@ function loadChals() {
 
             const chalheader = $('<p>{0}</p>'.format(chalinfo.name))
             const chalscore = $('<span>{0}</span>'.format(chalinfo.value))
-            for (var j = 0; j < chalinfo.tags.length; j++) {
-                var tag = 'tag-' + chalinfo.tags[j].value.replace(/ /g, '-')
+            for (let j = 0; j < chalinfo.tags.length; j++) {
+                const tag = 'tag-' + chalinfo.tags[j].value.replace(/ /g, '-')
                 chalwrap.addClass(tag)
             }
 
@@ -288,6 +286,7 @@ function loadChals() {
 function update() {
     return loadUserSolves() // Load the user's solved challenge ids
         .then(loadChals) //  Load the full list of challenges
+        .then(markSolves)
 }
 
 $(() => {
@@ -313,21 +312,21 @@ $(() => {
         history.replaceState('', window.document.title, window.location.pathname)
     })
 
-    $('#submit-key').click(function (event) {
-        submitKey($('#challenge-id').val(), $('#submission-input').val(), $('#nonce').val())
-    })
-
     $('.challenge-solves').click(function (event) {
         getSolves($('#challenge-id').val())
     })
 
-    $('#challenge-window').on('hide.bs.modal', function (event) {
+    $('#challenge-window').on('hide.bs.modal', function(event) {
         $('#submission-input').removeClass('wrong')
         $('#submission-input').removeClass('correct')
         $('#incorrect-key').slideUp()
         $('#correct-key').slideUp()
         $('#already-solved').slideUp()
         $('#too-fast').slideUp()
+    })
+
+    $('.load-hint').on('click', function(event) {
+        loadHint($(this).data('id'))
     })
 })
 setInterval(update, 300000) // Update every 5 minutes.
@@ -368,7 +367,7 @@ const displayUnlock = (id) => {
     })
 }
 
-const hint = (id) => {
+const loadHint = (id) => {
     CTFd.api.get_hint({hintId: id}).then((response) => {
         if (response.data.content) {
             displayHint(response.data)
